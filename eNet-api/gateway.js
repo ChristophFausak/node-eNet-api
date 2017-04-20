@@ -43,6 +43,10 @@ function gateway(config) {
                 if (json && (json.CMD == "ITEM_UPDATE_IND") && Array.isArray(json.VALUES)) {
                     json.VALUES.forEach(function(obj) {
                         if (obj.NUMBER){
+                            //acknowledge item update
+                            var msg = `{"CMD":"ITEM_VALUE_RES","PROTOCOL":"0.03","TIMESTAMP":"${Math.floor(Date.now()/1000)}","VALUES":[{"NUMBER":${obj.NUMBER},"STATE":"${obj.STATE}"}]}\r\n\r\n`;
+                            this.client.write(msg)
+                            
                             this.emit(obj.NUMBER.toString(), null, obj);
                         }
                     }.bind(this));
